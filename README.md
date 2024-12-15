@@ -30,41 +30,7 @@ This repository contains the configuration and scripts to manage Kubernetes clus
 
 ## Project Structure
 
-<pre>
-.devcontainer/
-  devcontainer.json
-  Dockerfile
-.github/
-  workflows/
-    app_deploy.yml
-    terraform-deploy.yml
-    terraform-destroy.yml
-.gitignore
-azure-aks-terraform/
-  .terraform/
-    providers/
-      ...
-  .terraform.lock.hcl
-  azurek8s
-  destroy.tfplan
-  main.tf
-  main.tfplan
-  outputs.tf
-  providers.tf
-  terraform.tfstate
-  terraform.tfstate.backup
-  terraform.tfvars
-  variables.tf
-clusters/
-  my-cluster/
-    flux-system/
-    gitrepository.yaml
-    helm-release.yaml
-k8s/
-  helm/
-    ...
-README.md
-</pre>
+The project utilizes Terraform, Kubernetes/Helm charts, Flux, Github Actions. The container which runs on AKS is built in another repository
 
 ## Getting Started
 
