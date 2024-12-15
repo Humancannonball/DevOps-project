@@ -1,0 +1,86 @@
+Location: 'eastus'
+
+ResourceGroups:
+  - Name: rg-portfolio-site
+    Location: 'eastus'
+
+VirtualNetwork:
+  Name: vnet-portfolio-site
+  ResourceGroupName: rg-portfolio-site
+  AddressSpaces:
+    - 10.1.0.0/16
+  Subnets:
+    - Name: subnet-aks
+      SubnetAddress: 10.1.2.0/24
+      NetworkSecurityGroup: nsg-aks
+      RouteTable: rt-aks
+    - Name: subnet-db
+      SubnetAddress: 10.1.3.0/24
+      NetworkSecurityGroup: nsg-db
+      RouteTable: rt-db
+
+NetworkSecurityGroups:
+  - Name: nsg-aks
+    Rules:
+      - Name: AllowSSH
+        Priority: 1000
+        Direction: Inbound
+        Access: Allow
+        Protocol: Tcp
+        SourcePortRange: '*'
+        DestinationPortRange: '22'
+        SourceAddressPrefix: '*'
+        DestinationAddressPrefix: '*'
+  - Name: nsg-db
+    Rules:
+      - Name: AllowSQL
+        Priority: 1001
+        Direction: Inbound
+        Access: Allow
+        Protocol: Tcp
+        SourcePortRange: '*'
+        DestinationPortRange: '1433'
+        SourceAddressPrefix: '*'
+        DestinationAddressPrefix: '*'
+
+RouteTables:
+  - Name: rt-aks
+    Routes:
+      - Name: default_route
+        AddressPrefix: '0.0.0.0/0'
+        NextHopType: Internet
+  - Name: rt-db
+    Routes:
+      - Name: default_route
+        AddressPrefix: '0.0.0.0/0'
+        NextHopType: Internet
+
+AzureKubernetesCluster:
+  Name: cluster-portfolio-site
+  ResourceGroupName: rg-portfolio-site
+  Location: 'eastus'
+  NodeCount: 1
+  NodeSize: Standard_B2s  
+  DnsPrefix: 'portfolio-site'
+  SubnetName: 'subnet-aks'
+  NetworkProfile:
+    NetworkPlugin: 'kubenet'
+    LoadBalancerSku: 'standard'
+    OutboundType: 'loadBalancer'
+
+ContainerRegistry:
+  Name: acrportfolio
+  ResourceGroupName: rg-portfolio-site
+  Location: 'eastus'
+  Sku: 'Basic'
+  AdminEnabled: true
+
+StorageAccount:
+  Name: portfoliostoragetfstate
+  ResourceGroupName: rg-portfolio-site
+  Location: 'eastus'
+
+UserAssignedIdentity:
+  Name: portfolioidentity
+  ResourceGroupName: rg-portfolio-site
+  Location: 'eastus'

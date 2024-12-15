@@ -1,0 +1,81 @@
+# HelmRelease for personal-website
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: personal-website
+  namespace: mark
+spec:
+  chart:
+    spec:
+      chart: ./k8s/helm
+      sourceRef:
+        kind: GitRepository
+        name: personal-website-repo
+  interval: 2m0s
+
+---
+# HelmRelease for Ingress-NGINX
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-nginx
+  namespace: mark
+spec:
+  chart:
+    spec:
+      chart: ingress-nginx
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx
+  interval: 2m0s
+  values:
+    controller:
+      replicaCount: 2
+
+---
+# HelmRelease for cert-manager
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: mark
+spec:
+  chart:
+    spec:
+      chart: cert-manager
+      sourceRef:
+        kind: HelmRepository
+        name: cert-manager
+  interval: 2m0s
+  values:
+    installCRDs: true
+
+---
+# HelmRelease for Prometheus
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: prometheus
+  namespace: mark
+spec:
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+  interval: 2m0s
+  values:
+    grafana:
+      ingress:
+        enabled: true
+        annotations:
+          kubernetes.io/ingress.class: nginx
+        hosts:
+          - grafana.markmikula.software
+    prometheus:
+      prometheusSpec:
+        serviceMonitorSelectorNilUsesHelmValues: false
+    alertmanager:
+      alertmanagerSpec:
+        serviceMonitorSelectorNilUsesHelmValues: false

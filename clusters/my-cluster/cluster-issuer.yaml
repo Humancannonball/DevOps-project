@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: http01-mark-cluster-issuer
+spec:
+  acme:
+    email: "mark20.mikula05@gmail.com"
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-prod-mark
+    solvers:
+    - http01:
+        ingress:
+          ingressClassName: nginx

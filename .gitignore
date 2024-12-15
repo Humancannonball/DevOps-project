@@ -1,0 +1,10 @@
+azure-aks-terraform/terraform.tfstate
+azure-aks-terraform/main.tfplan
+azure-aks-terraform/terraform.tfstate.backup
+azure-aks-terraform/.terraform/
+azure-aks-terraform/.terraform.lock.hcl
+azure-aks-terraform/terraform.tfvars
+azure-aks-terraform/azurek8s
+azure-aks-terraform/destroy.tfplan
+terraform.tfstate
+.env

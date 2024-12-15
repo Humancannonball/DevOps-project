@@ -1,0 +1,11 @@
+{
+  "name": "AD",
+  "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+    "ghcr.io/jsburckhardt/devcontainer-features/flux:1": {}
+  },
+  "postCreateCommand": "az --version"
+}

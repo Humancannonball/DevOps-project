@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: markmikula-software-cert
+  namespace: mark
+spec:
+  secretName: markmikula.software-tls
+  issuerRef:
+    name: http01-mark-cluster-issuer
+    kind: ClusterIssuer
+  commonName: markmikula.software
+  dnsNames:
+    - markmikula.software

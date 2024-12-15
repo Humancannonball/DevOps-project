@@ -1,0 +1,30 @@
+# HelmRepository for Ingress-NGINX
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: ingress-nginx
+  namespace: mark
+spec:
+  interval: 1m
+  url: https://kubernetes.github.io/ingress-nginx
+
+---
+# HelmRepository for cert-manager
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: cert-manager
+  namespace: mark
+spec:
+  interval: 1m
+  url: https://charts.jetstack.io
+---
+# HelmRepository for Prometheus
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: prometheus-community
+  namespace: mark
+spec:
+  interval: 1m
+  url: https://prometheus-community.github.io/helm-charts

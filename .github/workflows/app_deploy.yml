@@ -1,0 +1,133 @@
+name: Helm Deploy
+
+on:
+  push:
+    paths:
+      - 'k8s/**'
+      - '.github/workflows/app_deploy.yml'
+  workflow_dispatch:
+
+jobs:
+  helm-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Azure
+        run: |
+          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Get AKS Credentials
+        run: |
+          resource_group_name="rg-able-hound"
+          aks_cluster_name="cluster-sunny-mink"
+          az aks get-credentials --resource-group $resource_group_name --name $aks_cluster_name
+      # - name: Get AKS credentials
+      #   run: az aks get-credentials --resource-group rg-ea2-flaskapp-aks --name aks-ea2-flaskapp
+ 
+      - name: Install Flux CLI
+        run: |
+          curl -s https://fluxcd.io/install.sh | sudo bash
+      - name: Create Namespace
+        run: |
+          kubectl create namespace mark || true  
+
+
+      - name: Create or Update GitHub Token Secret
+        run: |
+          if kubectl get secret flux-git-token --namespace mark; then
+            kubectl delete secret flux-git-token --namespace mark
+          fi
+          kubectl create secret generic flux-git-token \
+            --from-literal=username=Humancannonball \
+            --from-literal=password=${{ secrets.GIT_TOKEN }} \
+            --namespace mark
+
+      - name: Create or Update ACR Secret
+        run: |
+          if kubectl get secret acr-secret --namespace mark; then
+            kubectl delete secret acr-secret --namespace mark
+          fi
+          kubectl create secret docker-registry acr-secret \
+            --docker-server=${{  secrets.AZURE_REGISTRY_NAME }}.azurecr.io \
+            --docker-username=${{ secrets.AZURE_CLIENT_ID }} \
+            --docker-password=${{ secrets.AZURE_CLIENT_SECRET }} \
+            --docker-email=${{ secrets.AZURE_EMAIL }} \
+            --namespace mark
+      - name: Check if Flux is Bootstrapped
+        run: |
+          kubectl get namespace flux-system || flux bootstrap github \
+            --owner=AlterDomus \
+            --repository=mark-internship-hub \
+            --branch=master \
+            --path=clusters/my-cluster
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      
+      - name: Apply Flux YAML files
+        run: |
+          kubectl apply -f clusters/my-cluster/gitrepository.yaml
+          kubectl apply -f clusters/my-cluster/helm-release.yaml
+        
+      - name: Add Ingress-NGINX Helm Repository
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+
+      - name: Add Ingress-NGINX Helm Repository
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+
+      - name: Install NGINX Ingress Controller
+        run: |
+          if helm ls -n ingress-nginx | grep ingress-nginx; then
+            echo "Ingress-NGINX is already installed"
+          else
+            helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
+          fi
+
+      - name: Verify Deployment
+        run: |
+          kubectl get pods --namespace mark
+          
+      - name: Verify Flux Installation
+        run: |
+          kubectl get pods --namespace flux-system
+
+      - name: Verify Ingress Controller
+        run: |
+          kubectl get pods --namespace ingress-nginx
+
+      - name: Verify Services
+        run: |
+          kubectl get svc --namespace mark
+
+      - name: Verify Ingress
+        run: |
+          kubectl get ingress --namespace mark
+      # - name: Install Helm
+      #   run: |
+      #     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      # - name: Deploy with Helm
+      #   run: |
+      #     helm upgrade --install personalsite ./k8s/helm --namespace default \
+      #       --set image.repository=${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/personalsite \
+      #       --set image.tag=latest
+
+      - name: Verify Deployment
+        run: |
+          kubectl get pods --namespace mark
+          
+      - name: Verify Flux Installation
+        run: |
+          kubectl get pods --namespace flux-system
+
+      - name: Rollback if Deployment Fails
+        if: failure()
+        run: |
+          git revert -m 1 HEAD
+          git push origin HEAD:master
