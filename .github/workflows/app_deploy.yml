@@ -88,6 +88,9 @@ jobs:
       - name: Verify Deployment
         run: |
           kubectl get pods --namespace mark
+          kubectl get pods --namespace mark -l app.kubernetes.io/name=web
+          kubectl get pods --namespace mark -l app.kubernetes.io/name=turing-service
+          kubectl get pods --namespace mark -l app.kubernetes.io/name=prisoner-service
           
       - name: Verify Flux Installation
         run: |
@@ -117,6 +120,9 @@ jobs:
       - name: Verify Deployment
         run: |
           kubectl get pods --namespace mark
+          kubectl get pods --namespace mark -l app.kubernetes.io/name=web
+          kubectl get pods --namespace mark -l app.kubernetes.io/name=turing-service
+          kubectl get pods --namespace mark -l app.kubernetes.io/name=prisoner-service
           
       - name: Verify Flux Installation
         run: |

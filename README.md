@@ -26,7 +26,7 @@ Welcome to Mark's repository for managing Kubernetes clusters using Flux.
 
 ## Introduction
 
-This repository contains the configuration and scripts to manage Kubernetes clusters using Flux. Flux is a set of continuous and progressive delivery solutions for Kubernetes that are open and extensible.
+This repository contains the configuration and scripts to manage Kubernetes clusters using Flux. Flux is a set of continuous and progressive delivery solutions for Kubernetes that are open and extensible. The project now uses three images: web, turing-service, and prisoner-service.
 
 ## Project Structure
 
@@ -76,7 +76,7 @@ This workflow is triggered by changes to the Kubernetes manifests or manually vi
 - **Apply Flux YAML Files**: Applies the Flux configuration files to the cluster.
 - **Add Ingress-NGINX Helm Repository**: Adds the Ingress-NGINX Helm repository and updates it.
 - **Install NGINX Ingress Controller**: Installs the NGINX Ingress Controller if it is not already installed.
-- **Verify Deployment**: Verifies the deployment by checking the status of the pods, services, and ingress resources in the cluster.
+- **Verify Deployment**: Verifies the deployment by checking the status of the pods, services, and ingress resources in the cluster. This includes checking for the three images: web, turing-service, and prisoner-service.
 
 ### Terraform Deploy
 
@@ -132,7 +132,7 @@ The Helm charts are used to package and deploy the Kubernetes resources for the 
 - **Chart.yaml**: Contains metadata about the Helm chart, such as the name, version, and description.
 - **values.yaml**: Contains the default configuration values for the chart, which can be overridden by the user.
 
-The `values.yaml` file includes configuration options for the service, image, ingress, autoscaling, and other Kubernetes resources. These values can be customized to suit the deployment requirements.
+The `values.yaml` file includes configuration options for the service, image, ingress, autoscaling, and other Kubernetes resources. These values can be customized to suit the deployment requirements. The project now uses three images: web, turing-service, and prisoner-service.
 
 By using Helm charts, we can easily package, configure, and deploy the application to Kubernetes clusters.
 
