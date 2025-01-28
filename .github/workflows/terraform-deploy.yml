@@ -1,10 +1,8 @@
 name: Terraform Deploy
+
 on:
-  push:
-    paths:
-      - 'azure-aks-terraform/**'
-      - '.github/workflows/terraform-deploy.yml'
   workflow_dispatch:
+
 jobs:
   terraform-deploy:
     runs-on: ubuntu-latest
@@ -31,7 +29,6 @@ jobs:
           TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          TF_VAR_sql_admin_password: ${{ secrets.SQL_ADMIN_PASSWORD }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
@@ -45,4 +42,3 @@ jobs:
           TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          TF_VAR_sql_admin_password: ${{ secrets.SQL_ADMIN_PASSWORD }}

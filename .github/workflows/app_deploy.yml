@@ -1,10 +1,6 @@
 name: Helm Deploy
 
 on:
-  push:
-    paths:
-      - 'k8s/**'
-      - '.github/workflows/app_deploy.yml'
   workflow_dispatch:
 
 jobs:
