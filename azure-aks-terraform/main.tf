@@ -67,8 +67,8 @@ resource "azurerm_role_assignment" "route_table_permission" {
 
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = local.config.AzureKubernetesCluster.Name
-  location            = local.config.AzureKubernetesCluster.Location
-  resource_group_name = local.config.AzureKubernetesCluster.ResourceGroupName
+  location            = var.location_map[local.config.AzureKubernetesCluster.Location]
+  resource_group_name = azurerm_resource_group.rg[local.config.AzureKubernetesCluster.ResourceGroupName].name
   dns_prefix          = local.config.AzureKubernetesCluster.DnsPrefix
 
   identity {
@@ -81,6 +81,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vm_size        = local.config.AzureKubernetesCluster.NodeSize
     node_count     = local.config.AzureKubernetesCluster.NodeCount
     vnet_subnet_id = module.vnet-subnet[local.config.AzureKubernetesCluster.SubnetName].subnet_id
+    os_disk_type   = "Ephemeral"
   }
 
   network_profile {
@@ -97,43 +98,10 @@ resource "azurerm_storage_account" "sa" {
   account_replication_type = "LRS"
 }
 
-# resource "azurerm_key_vault" "keyvault" {
-#   name                = local.config.KeyVault.Name
-#   location            = var.location_map[local.config.Location]
-#   resource_group_name = azurerm_resource_group.rg[local.config.KeyVault.ResourceGroupName].name
-#   tenant_id           = var.tenant_id
-#   sku_name            = local.config.KeyVault.SkuName
-# }
-
-# resource "azurerm_key_vault_secret" "sql_admin_password" {
-#   name         = local.sql_admin_password_secret_name
-#   value        = var.sql_admin_password
-#   key_vault_id = azurerm_key_vault.keyvault.id
-# }
-
-# data "azurerm_key_vault_secret" "sql_admin_password" {
-#   name         = local.sql_admin_password_secret_name
-#   key_vault_id = azurerm_key_vault.keyvault.id
-# }
-
-# module "sql_database" {
-#   source = "./modules/sql-database"
-
-#   server_name                   = local.config.SQLDatabase.ServerName
-#   database_name                 = local.config.SQLDatabase.Name
-#   resource_group_name           = azurerm_resource_group.rg[local.config.SQLDatabase.ResourceGroupName].name
-#   location                      = local.config.SQLDatabase.Location
-#   sql_version                      = local.config.SQLDatabase.Version
-#   administrator_login           = local.config.SQLDatabase.AdministratorLogin
-#   administrator_login_password  = data.azurerm_key_vault_secret.sql_admin_password.value
-#   sku_name                      = local.config.SQLDatabase.SkuName
-#   requested_service_objective_name = local.config.SQLDatabase.RequestedServiceObjectiveName
-# }
-
 resource "azurerm_container_registry" "acr" {
   name                = local.config.ContainerRegistry.Name
-  resource_group_name = local.config.ContainerRegistry.ResourceGroupName
-  location            = var.location_map[local.config.Location]
+  resource_group_name = azurerm_resource_group.rg[local.config.ContainerRegistry.ResourceGroupName].name
+  location            = var.location_map[local.config.ContainerRegistry.Location]
   sku                 = local.config.ContainerRegistry.Sku
   admin_enabled       = local.config.ContainerRegistry.AdminEnabled
 }

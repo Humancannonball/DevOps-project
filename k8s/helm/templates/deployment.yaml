@@ -18,7 +18,15 @@ spec:
       imagePullSecrets:
         - name: acr-secret
       containers:
-      - name: {{ .Values.service.name }}
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+      - name: web
+        image: {{ .Values.images.web.repository }}:{{ .Values.images.web.tag }}
         ports:
-        - containerPort: {{ .Values.service.port }}
+        - containerPort: {{ .Values.service.ports.web.containerPort }}
+      - name: turing
+        image: {{ .Values.images.turingService.repository }}:{{ .Values.images.turingService.tag }}
+        ports:
+        - containerPort: {{ .Values.service.ports.turing.containerPort }}
+      - name: prisoner
+        image: {{ .Values.images.prisonerService.repository }}:{{ .Values.images.prisonerService.tag }}
+        ports:
+        - containerPort: {{ .Values.service.ports.prisoner.containerPort }}

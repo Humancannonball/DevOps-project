@@ -38,12 +38,6 @@ output "acr_admin_password" {
   sensitive   = true
 }
 
-# # Key Vault Details
-# output "key_vault_uri" {
-#   value       = azurerm_key_vault.keyvault.vault_uri
-#   description = "The URI of the Azure Key Vault."
-# }
-
 # Storage Account Details
 output "storage_account_name" {
   value       = azurerm_storage_account.sa.name

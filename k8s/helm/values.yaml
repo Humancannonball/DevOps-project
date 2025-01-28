@@ -1,18 +1,35 @@
 service:
   name: personalsite
   type: ClusterIP
-  port: 80
-  targetPort: 8080
+  ports:
+    web:
+      servicePort: 80
+      containerPort: 8080
+    turing:
+      servicePort: 5002
+      containerPort: 5002
+    prisoner:
+      servicePort: 5000
+      containerPort: 5000
 
 selector:
   app: personalsite
 
 replicaCount: 2
 
-image:
-  repository: acrmark.azurecr.io/personalsite
-  tag: latest
-  pullPolicy: IfNotPresent
+images:
+  web:
+    repository: acrmark.azurecr.io/web
+    tag: latest
+    pullPolicy: IfNotPresent
+  turingService:
+    repository: acrmark.azurecr.io/turing-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  prisonerService:
+    repository: acrmark.azurecr.io/prisoner-service
+    tag: latest
+    pullPolicy: IfNotPresent
 
 serviceAccount:
   create: true

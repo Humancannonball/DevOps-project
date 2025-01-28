@@ -2,7 +2,6 @@ locals {
   config_file = "config.yml"
   config_file_content = fileexists(local.config_file) ? file(local.config_file) : "NoSettingsFileFound: true"
   config = yamldecode(local.config_file_content)
-  # sql_admin_password_secret_name = local.config.SQLDatabase.AdministratorLoginPasswordSecretName
 }
 
 variable "location_map" {
@@ -15,13 +14,6 @@ variable "location_map" {
     cus    = "centralus"
   }
 }
-
-# variable "sql_admin_password" {
-#   description = "The password for the SQL administrator"
-#   type        = string
-#   sensitive   = true
-# }
-
 variable "allow_vm_sku" {
   type = map(string)
   default = {

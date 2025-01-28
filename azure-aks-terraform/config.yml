@@ -31,25 +31,9 @@ NetworkSecurityGroups:
         DestinationPortRange: '22'
         SourceAddressPrefix: '*'
         DestinationAddressPrefix: '*'
-  - Name: nsg-db
-    Rules:
-      - Name: AllowSQL
-        Priority: 1001
-        Direction: Inbound
-        Access: Allow
-        Protocol: Tcp
-        SourcePortRange: '*'
-        DestinationPortRange: '1433'
-        SourceAddressPrefix: '*'
-        DestinationAddressPrefix: '*'
 
 RouteTables:
   - Name: rt-aks
-    Routes:
-      - Name: default_route
-        AddressPrefix: '0.0.0.0/0'
-        NextHopType: Internet
-  - Name: rt-db
     Routes:
       - Name: default_route
         AddressPrefix: '0.0.0.0/0'
@@ -60,12 +44,12 @@ AzureKubernetesCluster:
   ResourceGroupName: rg-portfolio-site
   Location: 'eastus'
   NodeCount: 1
-  NodeSize: Standard_B2s  
+  NodeSize: Standard_B1ms
   DnsPrefix: 'portfolio-site'
   SubnetName: 'subnet-aks'
   NetworkProfile:
     NetworkPlugin: 'kubenet'
-    LoadBalancerSku: 'standard'
+    LoadBalancerSku: 'basic'
     OutboundType: 'loadBalancer'
 
 ContainerRegistry:

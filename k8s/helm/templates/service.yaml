@@ -7,10 +7,15 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-      protocol: TCP
-      name: http
+    - name: web
+      port: {{ .Values.service.ports.web.servicePort }}
+      targetPort: {{ .Values.service.ports.web.containerPort }}
+    - name: turing
+      port: {{ .Values.service.ports.turing.servicePort }}
+      targetPort: {{ .Values.service.ports.turing.containerPort }}
+    - name: prisoner
+      port: {{ .Values.service.ports.prisoner.servicePort }}
+      targetPort: {{ .Values.service.ports.prisoner.containerPort }}
   selector:
     {{- include "helm.selectorLabels" . | nindent 4 }}
   {{- if .Values.service.loadBalancerIP }}
