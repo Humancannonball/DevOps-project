@@ -1,4 +1,4 @@
-name: Helm Deploy
+name: App Deploy
 
 on:
   workflow_dispatch:
@@ -11,25 +11,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install yq
+        run: |
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.30.6/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
+
+      - name: Parse config.yml
+        id: parse_config
+        run: |
+          CONFIG_FILE=config.yml
+          RESOURCE_GROUP_NAME=$(yq e '.ResourceGroups[0].Name' $CONFIG_FILE)
+          AKS_CLUSTER_NAME=$(yq e '.AzureKubernetesCluster.Name' $CONFIG_FILE)
+          echo "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME" >> $GITHUB_ENV
+          echo "AKS_CLUSTER_NAME=$AKS_CLUSTER_NAME" >> $GITHUB_ENV
+
       - name: Log in to Azure
         run: |
             az login --service-principal -u ${{ secrets.ARM_CLIENT_ID }} -p ${{ secrets.ARM_CLIENT_SECRET }} --tenant ${{ secrets.ARM_TENANT_ID }}
 
       - name: Get AKS Credentials
         run: |
-          resource_group_name="rg-able-hound"
-          aks_cluster_name="cluster-sunny-mink"
-          az aks get-credentials --resource-group $resource_group_name --name $aks_cluster_name
-      # - name: Get AKS credentials
-      #   run: az aks get-credentials --resource-group rg-ea2-flaskapp-aks --name aks-ea2-flaskapp
- 
+          az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME
+
       - name: Install Flux CLI
         run: |
           curl -s https://fluxcd.io/install.sh | sudo bash
+
       - name: Create Namespace
         run: |
           kubectl create namespace mark || true  
-
 
       - name: Create or Update GitHub Token Secret
         run: |
@@ -52,6 +62,7 @@ jobs:
             --docker-password=${{ secrets.ARM_CLIENT_SECRET }} \
             --docker-email=${{ secrets.AZURE_EMAIL }} \
             --namespace mark
+
       - name: Check if Flux is Bootstrapped
         run: |
           kubectl get namespace flux-system || flux bootstrap github \
@@ -67,11 +78,6 @@ jobs:
           kubectl apply -f clusters/my-cluster/gitrepository.yaml
           kubectl apply -f clusters/my-cluster/helm-release.yaml
         
-      - name: Add Ingress-NGINX Helm Repository
-        run: |
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-          helm repo update
-
       - name: Add Ingress-NGINX Helm Repository
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -107,26 +113,6 @@ jobs:
       - name: Verify Ingress
         run: |
           kubectl get ingress --namespace mark
-      # - name: Install Helm
-      #   run: |
-      #     curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-
-      # - name: Deploy with Helm
-      #   run: |
-      #     helm upgrade --install personalsite ./k8s/helm --namespace default \
-      #       --set image.repository=${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/personalsite \
-      #       --set image.tag=latest
-
-      - name: Verify Deployment
-        run: |
-          kubectl get pods --namespace mark
-          kubectl get pods --namespace mark -l app.kubernetes.io/name=web
-          kubectl get pods --namespace mark -l app.kubernetes.io/name=turing-service
-          kubectl get pods --namespace mark -l app.kubernetes.io/name=prisoner-service
-          
-      - name: Verify Flux Installation
-        run: |
-          kubectl get pods --namespace flux-system
 
       - name: Rollback if Deployment Fails
         if: failure()
