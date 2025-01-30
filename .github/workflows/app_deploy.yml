@@ -19,7 +19,7 @@ jobs:
       - name: Parse config.yml
         id: parse_config
         run: |
-          CONFIG_FILE=config.yml
+          CONFIG_FILE=azure-aks-terraform/config.yml
           RESOURCE_GROUP_NAME=$(yq e '.ResourceGroups[0].Name' $CONFIG_FILE)
           AKS_CLUSTER_NAME=$(yq e '.AzureKubernetesCluster.Name' $CONFIG_FILE)
           echo "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME" >> $GITHUB_ENV
