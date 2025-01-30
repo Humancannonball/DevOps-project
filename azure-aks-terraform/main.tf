@@ -81,7 +81,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vm_size        = local.config.AzureKubernetesCluster.NodeSize
     node_count     = local.config.AzureKubernetesCluster.NodeCount
     vnet_subnet_id = module.vnet-subnet[local.config.AzureKubernetesCluster.SubnetName].subnet_id
-    os_disk_type   = "Ephemeral"
   }
 
   network_profile {
@@ -96,6 +95,11 @@ resource "azurerm_storage_account" "sa" {
   location                 = local.config.Location
   account_tier             = local.config.StorageAccount.AccountTier
   account_replication_type = local.config.StorageAccount.AccountReplicationType
+}
+resource "azurerm_storage_container" "tfstate" {
+  name                  = local.config.StorageContainer[0].Name
+  storage_account_name  = azurerm_storage_account.sa.name
+  container_access_type = local.config.StorageContainer[0].ContainerAccessType
 }
 
 resource "azurerm_container_registry" "acr" {

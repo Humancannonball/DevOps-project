@@ -2,7 +2,7 @@ terraform {
   required_version = ">=1.0"
 
   backend "azurerm" {
-    resource_group_name   = "rg-able-hound"
+    resource_group_name   = "rg-personalsite"  # Changed from "rg-able-hound"
     storage_account_name  = "markpersonalsite"
     container_name        = "tfstate"
     key                   = "terraform.tfstate"

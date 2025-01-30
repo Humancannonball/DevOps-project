@@ -37,7 +37,7 @@ AzureKubernetesCluster:
   ResourceGroupName: rg-personalsite
   Location: 'northeurope'
   NodeCount: 1
-  NodeSize: Standard_B1ms  # Adjust as per workload requirements
+  NodeSize: "Standard_B2s"
   DnsPrefix: 'personalsite'
   SubnetName: 'subnet-aks'
   NetworkProfile:
@@ -53,11 +53,15 @@ ContainerRegistry:
   AdminEnabled: false  # Disable if admin access is not required
 
 StorageAccount:
-  Name: personalsitestorage
+  Name: markpersonalsite
   ResourceGroupName: rg-personalsite
   Location: 'northeurope'
   AccountTier: 'Standard'
   AccountReplicationType: 'LRS'
+  
+StorageContainer:
+  - Name: tfstate
+    ContainerAccessType: 'private'
 
 UserAssignedIdentity:
   Name: personalsite-identity
