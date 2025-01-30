@@ -1,5 +1,12 @@
 variable "route_table" {
-  type        = any
+  type = object({
+    Name = string
+    Routes = optional(list(object({
+      Name          = string
+      AddressPrefix = string
+      NextHopType   = string
+    })), [])
+  })
   description = "Configuration map for the route table."
 }
 

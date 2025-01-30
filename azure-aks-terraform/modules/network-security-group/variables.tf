@@ -1,5 +1,18 @@
 variable "network_security_group" {
-  type        = any
+  type = object({
+    Name = string
+    Rules = optional(list(object({
+      Name                       = string
+      Priority                   = number
+      Direction                  = string
+      Access                     = string
+      Protocol                   = string
+      SourcePortRange            = string
+      DestinationPortRange       = string
+      SourceAddressPrefix        = string
+      DestinationAddressPrefix   = string
+    })), [])
+  })
   description = "Configuration map for the network security group."
 }
 

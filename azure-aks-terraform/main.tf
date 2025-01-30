@@ -25,8 +25,8 @@ module "network-security-group" {
   source = "./modules/network-security-group"
 
   network_security_group = each.value
-  resource_group_name = azurerm_virtual_network.vnet.resource_group_name
-  location = local.config.Location
+  resource_group_name    = azurerm_resource_group.rg[each.value.ResourceGroupName].name
+  location               = local.config.Location
 }
 
 module "route-table" {
@@ -34,9 +34,9 @@ module "route-table" {
 
   source = "./modules/route-table"
 
-  route_table = each.value
-  resource_group_name = azurerm_virtual_network.vnet.resource_group_name
-  location = local.config.Location
+  route_table         = each.value
+  resource_group_name = azurerm_resource_group.rg[each.value.ResourceGroupName].name
+  location            = local.config.Location
 }
 
 module "vnet-subnet" {
