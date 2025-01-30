@@ -3,7 +3,7 @@ terraform {
 
   backend "azurerm" {
     resource_group_name   = "rg-able-hound"
-    storage_account_name  = "markstoragetfstate"
+    storage_account_name  = "markpersonalsite"
     container_name        = "tfstate"
     key                   = "terraform.tfstate"
   }

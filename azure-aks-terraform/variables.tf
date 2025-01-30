@@ -4,16 +4,6 @@ locals {
   config = yamldecode(local.config_file_content)
 }
 
-variable "location_map" {
-  type = map(any)
-  default = {
-    eastus = "eastus"
-    ea2    = "eastus2"
-    weu    = "westeurope"
-    neu    = "northeurope"
-    cus    = "centralus"
-  }
-}
 variable "allow_vm_sku" {
   type = map(string)
   default = {

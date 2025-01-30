@@ -2,13 +2,13 @@ resource "azurerm_resource_group" "rg" {
   for_each = { for key in local.config.ResourceGroups : key.Name => key }
 
   name     = each.value.Name
-  location = var.location_map[local.config.Location]
+  location = local.config.Location
   tags     = lookup(each.value, "Tags", null) != null ? each.value.Tags : {}
 }
 
 resource "azurerm_virtual_network" "vnet" {
   name                = local.config.VirtualNetwork.Name
-  location            = var.location_map[local.config.Location]
+  location            = local.config.Location
   resource_group_name = azurerm_resource_group.rg[local.config.VirtualNetwork.ResourceGroupName].name
   address_space       = local.config.VirtualNetwork.AddressSpaces
 
@@ -26,7 +26,7 @@ module "network-security-group" {
 
   network_security_group = each.value
   resource_group_name = azurerm_virtual_network.vnet.resource_group_name
-  location = var.location_map[local.config.Location]
+  location = local.config.Location
 }
 
 module "route-table" {
@@ -36,7 +36,7 @@ module "route-table" {
 
   route_table = each.value
   resource_group_name = azurerm_virtual_network.vnet.resource_group_name
-  location = var.location_map[local.config.Location]
+  location = local.config.Location
 }
 
 module "vnet-subnet" {
@@ -47,7 +47,7 @@ module "vnet-subnet" {
   subnet = each.value
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name = azurerm_virtual_network.vnet.resource_group_name
-  location = var.location_map[local.config.Location]
+  location = local.config.Location
 
   nsg_id = module.network-security-group[each.value.NetworkSecurityGroup].nsg_resource_id
   rt_id = module.route-table[each.value.RouteTable].rt_resource_id
@@ -56,7 +56,7 @@ module "vnet-subnet" {
 resource "azurerm_user_assigned_identity" "k8s_identity" {
   name                = local.config.UserAssignedIdentity.Name
   resource_group_name = azurerm_resource_group.rg[local.config.UserAssignedIdentity.ResourceGroupName].name
-  location            = var.location_map[local.config.Location]
+  location            = local.config.Location
 }
 
 resource "azurerm_role_assignment" "route_table_permission" {
@@ -67,7 +67,7 @@ resource "azurerm_role_assignment" "route_table_permission" {
 
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = local.config.AzureKubernetesCluster.Name
-  location            = var.location_map[local.config.AzureKubernetesCluster.Location]
+  location            = local.config.AzureKubernetesCluster.Location
   resource_group_name = azurerm_resource_group.rg[local.config.AzureKubernetesCluster.ResourceGroupName].name
   dns_prefix          = local.config.AzureKubernetesCluster.DnsPrefix
 
@@ -93,15 +93,15 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 resource "azurerm_storage_account" "sa" {
   name                     = local.config.StorageAccount.Name
   resource_group_name      = azurerm_resource_group.rg[local.config.StorageAccount.ResourceGroupName].name
-  location                 = var.location_map[local.config.Location]
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+  location                 = local.config.Location
+  account_tier             = local.config.StorageAccount.AccountTier
+  account_replication_type = local.config.StorageAccount.AccountReplicationType
 }
 
 resource "azurerm_container_registry" "acr" {
   name                = local.config.ContainerRegistry.Name
   resource_group_name = azurerm_resource_group.rg[local.config.ContainerRegistry.ResourceGroupName].name
-  location            = var.location_map[local.config.ContainerRegistry.Location]
+  location            = local.config.ContainerRegistry.Location
   sku                 = local.config.ContainerRegistry.Sku
   admin_enabled       = local.config.ContainerRegistry.AdminEnabled
 }

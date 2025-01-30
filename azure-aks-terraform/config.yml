@@ -1,12 +1,12 @@
-Location: 'eastus'
+Location: 'northeurope'
 
 ResourceGroups:
-  - Name: rg-portfolio-site
-    Location: 'eastus'
+  - Name: rg-personalsite
+    Location: 'northeurope'
 
 VirtualNetwork:
-  Name: vnet-portfolio-site
-  ResourceGroupName: rg-portfolio-site
+  Name: vnet-personalsite
+  ResourceGroupName: rg-personalsite
   AddressSpaces:
     - 10.1.0.0/16
   Subnets:
@@ -18,34 +18,27 @@ VirtualNetwork:
       SubnetAddress: 10.1.3.0/24
       NetworkSecurityGroup: nsg-db
       RouteTable: rt-db
+  Location: 'northeurope'
 
 NetworkSecurityGroups:
   - Name: nsg-aks
-    Rules:
-      - Name: AllowSSH
-        Priority: 1000
-        Direction: Inbound
-        Access: Allow
-        Protocol: Tcp
-        SourcePortRange: '*'
-        DestinationPortRange: '22'
-        SourceAddressPrefix: '*'
-        DestinationAddressPrefix: '*'
+    ResourceGroupName: rg-personalsite
+  - Name: nsg-db
+    ResourceGroupName: rg-personalsite
 
 RouteTables:
   - Name: rt-aks
-    Routes:
-      - Name: default_route
-        AddressPrefix: '0.0.0.0/0'
-        NextHopType: Internet
+    ResourceGroupName: rg-personalsite
+  - Name: rt-db
+    ResourceGroupName: rg-personalsite
 
 AzureKubernetesCluster:
-  Name: cluster-portfolio-site
-  ResourceGroupName: rg-portfolio-site
-  Location: 'eastus'
+  Name: cluster-personalsite
+  ResourceGroupName: rg-personalsite
+  Location: 'northeurope'
   NodeCount: 1
-  NodeSize: Standard_B1ms
-  DnsPrefix: 'portfolio-site'
+  NodeSize: Standard_B1ms  # Adjust as per workload requirements
+  DnsPrefix: 'personalsite'
   SubnetName: 'subnet-aks'
   NetworkProfile:
     NetworkPlugin: 'kubenet'
@@ -53,18 +46,20 @@ AzureKubernetesCluster:
     OutboundType: 'loadBalancer'
 
 ContainerRegistry:
-  Name: acrportfolio
-  ResourceGroupName: rg-portfolio-site
-  Location: 'eastus'
-  Sku: 'Basic'
-  AdminEnabled: true
+  Name: acrpersonalsite
+  ResourceGroupName: rg-personalsite
+  Location: 'northeurope'
+  Sku: 'Basic'  # Cost-effective SKU for development
+  AdminEnabled: false  # Disable if admin access is not required
 
 StorageAccount:
-  Name: portfoliostoragetfstate
-  ResourceGroupName: rg-portfolio-site
-  Location: 'eastus'
+  Name: personalsitestorage
+  ResourceGroupName: rg-personalsite
+  Location: 'northeurope'
+  AccountTier: 'Standard'
+  AccountReplicationType: 'LRS'
 
 UserAssignedIdentity:
-  Name: portfolioidentity
-  ResourceGroupName: rg-portfolio-site
-  Location: 'eastus'
+  Name: personalsite-identity
+  ResourceGroupName: rg-personalsite
+  Location: 'northeurope'
