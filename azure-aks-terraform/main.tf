@@ -98,6 +98,9 @@ resource "azurerm_storage_account" "sa" {
   location                 = local.config.Location
   account_tier             = local.config.StorageAccount.AccountTier
   account_replication_type = local.config.StorageAccount.AccountReplicationType
+  lifecycle {
+    prevent_destroy = true
+  }  
 }
 resource "azurerm_storage_container" "tfstate" {
   name                  = local.config.StorageContainer[0].Name
