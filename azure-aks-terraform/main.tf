@@ -4,6 +4,9 @@ resource "azurerm_resource_group" "rg" {
   name     = each.value.Name
   location = local.config.Location
   tags     = lookup(each.value, "Tags", null) != null ? each.value.Tags : {}
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "azurerm_virtual_network" "vnet" {
@@ -100,6 +103,9 @@ resource "azurerm_storage_container" "tfstate" {
   name                  = local.config.StorageContainer[0].Name
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = local.config.StorageContainer[0].ContainerAccessType
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "azurerm_container_registry" "acr" {
