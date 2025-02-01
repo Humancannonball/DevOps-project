@@ -70,15 +70,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       
-      - name: Apply Flux YAML files
-        run: |
-          kubectl apply -f clusters/my-cluster/gitrepository.yaml
-          kubectl apply -f clusters/my-cluster/helm-release.yaml
+      # - name: Apply Flux YAML files
+      #   run: |
+      #     kubectl apply -f clusters/my-cluster/gitrepository.yaml
+      #     kubectl apply -f clusters/my-cluster/helm-release.yaml
         
-      - name: Add Ingress-NGINX Helm Repository
-        run: |
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-          helm repo update
+      # - name: Add Ingress-NGINX Helm Repository
+      #   run: |
+      #     helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+      #     helm repo update
 
       - name: Install NGINX Ingress Controller
         run: |
@@ -91,9 +91,6 @@ jobs:
       - name: Verify Deployment
         run: |
           kubectl get pods --namespace mark
-          kubectl get pods --namespace mark -l app.kubernetes.io/name=web
-          kubectl get pods --namespace mark -l app.kubernetes.io/name=turing-service
-          kubectl get pods --namespace mark -l app.kubernetes.io/name=prisoner-service
           
       - name: Verify Flux Installation
         run: |

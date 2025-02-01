@@ -19,15 +19,15 @@ replicaCount: 2
 
 images:
   web:
-    repository: acrmark.azurecr.io/web
+    repository: acrpersonalsite.azurecr.io/web
     tag: latest
     pullPolicy: IfNotPresent
   turingService:
-    repository: acrmark.azurecr.io/turing-service
+    repository: acrpersonalsite.azurecr.io/turing-service
     tag: latest
     pullPolicy: IfNotPresent
   prisonerService:
-    repository: acrmark.azurecr.io/prisoner-service
+    repository: acrpersonalsite.azurecr.io/prisoner-service
     tag: latest
     pullPolicy: IfNotPresent
 
