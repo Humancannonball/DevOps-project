@@ -91,7 +91,18 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     load_balancer_sku = local.config.AzureKubernetesCluster.NetworkProfile.LoadBalancerSku
     outbound_type     = local.config.AzureKubernetesCluster.NetworkProfile.OutboundType
   }
+
+  role_based_access_control {
+    enabled = true
+  }
+
+  addon_profile {
+    kube_dashboard {
+      enabled = true
+    }
+  }
 }
+
 resource "azurerm_storage_account" "sa" {
   name                     = local.config.StorageAccount.Name
   resource_group_name      = azurerm_resource_group.rg[local.config.StorageAccount.ResourceGroupName].name

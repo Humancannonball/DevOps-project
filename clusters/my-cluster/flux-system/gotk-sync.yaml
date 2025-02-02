@@ -25,3 +25,9 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: flux-system
+      namespace: flux-system
+  wait: true
