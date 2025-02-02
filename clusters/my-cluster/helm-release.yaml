@@ -31,6 +31,8 @@ spec:
   values:
     controller:
       replicaCount: 2
+      admissionWebhooks:
+        enabled: false
 
 ---
 # HelmRelease for cert-manager
