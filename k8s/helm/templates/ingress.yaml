@@ -27,7 +27,7 @@ spec:
             pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
-                name: {{ include "helm.fullname" . }}
+                name: {{ include "helm.fullname" $ }}
                 port:
                   number: {{ $.Values.service.ports.web.servicePort }}
           {{- end }}
