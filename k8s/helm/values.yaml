@@ -23,6 +23,11 @@ images:
     repository: acrpersonalsite.azurecr.io/web
     tag: latest
     pullPolicy: IfNotPresent
+    env:
+      - name: TURING_SERVICE_URL
+        value: "http://localhost:5002"
+      - name: PRISONER_SERVICE_URL
+        value: "http://localhost:5000"
   turingService:
     repository: acrpersonalsite.azurecr.io/turing-service
     tag: latest
