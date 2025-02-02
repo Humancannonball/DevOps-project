@@ -24,7 +24,7 @@ images:
     tag: latest
     pullPolicy: IfNotPresent
     env:
-      TURING_SERVICE_URL: "http://localhost:5002"
+      TURING_SERVICE_URL: "http://localhost:5001"
       PRISONER_SERVICE_URL: "http://localhost:5000"
   turingService:
     repository: acrpersonalsite.azurecr.io/turing-service
