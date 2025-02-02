@@ -23,14 +23,51 @@ VirtualNetwork:
 NetworkSecurityGroups:
   - Name: nsg-aks
     ResourceGroupName: rg-personalsite
+    Rules:
+      - Name: Allow-HTTP
+        Priority: 100
+        Direction: Inbound
+        Access: Allow
+        Protocol: Tcp
+        SourcePortRange: "*"
+        DestinationPortRange: "80"
+        SourceAddressPrefix: "*"
+        DestinationAddressPrefix: "*"
+      - Name: Allow-HTTPS
+        Priority: 110
+        Direction: Inbound
+        Access: Allow
+        Protocol: Tcp
+        SourcePortRange: "*"
+        DestinationPortRange: "443"
+        SourceAddressPrefix: "*"
+        DestinationAddressPrefix: "*"
   - Name: nsg-db
     ResourceGroupName: rg-personalsite
+    Rules:
+      - Name: Allow-DB
+        Priority: 100
+        Direction: Inbound
+        Access: Allow
+        Protocol: Tcp
+        SourcePortRange: "*"
+        DestinationPortRange: "5432"
+        SourceAddressPrefix: "*"
+        DestinationAddressPrefix: "*"
 
 RouteTables:
   - Name: rt-aks
     ResourceGroupName: rg-personalsite
+    Routes:
+      - Name: default-route
+        AddressPrefix: "0.0.0.0/0"
+        NextHopType: "Internet"
   - Name: rt-db
     ResourceGroupName: rg-personalsite
+    Routes:
+      - Name: default-route
+        AddressPrefix: "0.0.0.0/0"
+        NextHopType: "Internet"
 
 AzureKubernetesCluster:
   Name: cluster-personalsite

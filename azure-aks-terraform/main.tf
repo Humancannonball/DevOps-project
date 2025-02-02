@@ -63,7 +63,9 @@ resource "azurerm_user_assigned_identity" "k8s_identity" {
 }
 
 resource "azurerm_role_assignment" "route_table_permission" {
-  scope                = module.route-table["rt-aks"].rt_resource_id
+  scope = module.route-table[
+    lookup({ for s in local.config.VirtualNetwork.Subnets : s.Name => s.RouteTable }, local.config.AzureKubernetesCluster.SubnetName)
+  ].rt_resource_id
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_user_assigned_identity.k8s_identity.principal_id
 }
@@ -92,6 +94,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     outbound_type     = local.config.AzureKubernetesCluster.NetworkProfile.OutboundType
   }
 }
+
 resource "azurerm_storage_account" "sa" {
   name                     = local.config.StorageAccount.Name
   resource_group_name      = azurerm_resource_group.rg[local.config.StorageAccount.ResourceGroupName].name

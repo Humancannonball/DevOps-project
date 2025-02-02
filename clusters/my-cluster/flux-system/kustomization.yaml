@@ -1,14 +1,6 @@
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-metadata:
-  name: cluster-issuer
-  namespace: flux-system
-spec:
-  interval: 2m0s
-  path: "./cluster-issuer.yaml"
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  dependsOn:
-    - name: cert-manager   # This Kustomization must have this name
+resources:
+- https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
+- gotk-components.yaml
+- gotk-sync.yaml
