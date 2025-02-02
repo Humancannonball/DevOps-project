@@ -20,12 +20,13 @@ spec:
       containers:
       - name: web
         image: {{ .Values.images.web.repository }}:{{ .Values.images.web.tag }}
+        ports:
+        - containerPort: {{ .Values.service.ports.web.containerPort }}
         env:
         {{- range $key, $value := .Values.images.web.env }}
         - name: {{ $key }}
-          value: {{ $value }}
-        {{- end }}
-      - name: turing
+          value: {{ $value | quote }}
+        {{- end }}      - name: turing
         image: {{ .Values.images.turingService.repository }}:{{ .Values.images.turingService.tag }}
         ports:
         - containerPort: {{ .Values.service.ports.turing.containerPort }}
