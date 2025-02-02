@@ -1,10 +1,10 @@
-Location: 'northeurope'
+location: 'northeurope'
 
-ResourceGroups:
+resource_groups:
   - Name: rg-personalsite
     Location: 'northeurope'
 
-VirtualNetwork:
+virtual_network:
   Name: vnet-personalsite
   ResourceGroupName: rg-personalsite
   AddressSpaces:
@@ -20,7 +20,7 @@ VirtualNetwork:
       RouteTable: rt-db
   Location: 'northeurope'
 
-NetworkSecurityGroups:
+network_security_groups:
   - Name: nsg-aks
     ResourceGroupName: rg-personalsite
     Rules:
@@ -55,7 +55,7 @@ NetworkSecurityGroups:
         SourceAddressPrefix: "*"
         DestinationAddressPrefix: "*"
 
-RouteTables:
+route_tables:
   - Name: rt-aks
     ResourceGroupName: rg-personalsite
     Routes:
@@ -69,7 +69,7 @@ RouteTables:
         AddressPrefix: "0.0.0.0/0"
         NextHopType: "Internet"
 
-AzureKubernetesCluster:
+azure_kubernetes_cluster:
   Name: cluster-personalsite
   ResourceGroupName: rg-personalsite
   Location: 'northeurope'
@@ -82,25 +82,25 @@ AzureKubernetesCluster:
     LoadBalancerSku: 'basic'
     OutboundType: 'loadBalancer'
 
-ContainerRegistry:
+container_registry:
   Name: acrpersonalsite
   ResourceGroupName: rg-personalsite
   Location: 'northeurope'
   Sku: 'Basic'  # Cost-effective SKU for development
   AdminEnabled: false  # Disable if admin access is not required
 
-StorageAccount:
+storage_account:
   Name: markpersonalsite
   ResourceGroupName: rg-personalsite
   Location: 'northeurope'
   AccountTier: 'Standard'
   AccountReplicationType: 'LRS'
   
-StorageContainer:
+storage_container:
   - Name: tfstate
     ContainerAccessType: 'private'
 
-UserAssignedIdentity:
+user_assigned_identity:
   Name: personalsite-identity
   ResourceGroupName: rg-personalsite
   Location: 'northeurope'
