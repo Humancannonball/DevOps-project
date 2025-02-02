@@ -20,17 +20,21 @@ spec:
       containers:
       - name: web
         image: {{ .Values.images.web.repository }}:{{ .Values.images.web.tag }}
+        imagePullPolicy: {{ .Values.images.web.pullPolicy }}
         ports:
         - containerPort: {{ .Values.service.ports.web.containerPort }}
         env:
         {{- range $key, $value := .Values.images.web.env }}
         - name: {{ $key }}
           value: {{ $value | quote }}
-        {{- end }}      - name: turing
+        {{- end }}
+      - name: turing
         image: {{ .Values.images.turingService.repository }}:{{ .Values.images.turingService.tag }}
+        imagePullPolicy: {{ .Values.images.turingService.pullPolicy }}
         ports:
         - containerPort: {{ .Values.service.ports.turing.containerPort }}
       - name: prisoner
         image: {{ .Values.images.prisonerService.repository }}:{{ .Values.images.prisonerService.tag }}
+        imagePullPolicy: {{ .Values.images.prisonerService.pullPolicy }}
         ports:
         - containerPort: {{ .Values.service.ports.prisoner.containerPort }}
