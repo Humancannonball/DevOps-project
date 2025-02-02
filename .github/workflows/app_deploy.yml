@@ -62,7 +62,8 @@ jobs:
 
       - name: Check if Flux is Bootstrapped
         run: |
-          kubectl get namespace flux-system || flux bootstrap github \
+          # kubectl get namespace flux-system 
+              flux bootstrap github \
             --owner=Humancannonball \
             --repository=DevOps-project \
             --branch=master \
