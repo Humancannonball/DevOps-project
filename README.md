@@ -8,6 +8,10 @@ Welcome to Mark's repository for managing Kubernetes clusters using Flux.
 - [Technologies Used](#technologies-used)
 - [Helm Charts](#helm-charts)
 - [Terraform Configuration](#terraform-configuration)
+- [Terraform Resources](#terraform-resources)
+- [Kubernetes Resources](#kubernetes-resources)
+- [Flux Configuration and Workflows](#flux-configuration-and-workflows)
+- [GitHub Actions Workflows](#github-actions-workflows)
 - [Purpose and Contents](#purpose-and-contents)
 - [Key Features and Benefits](#key-features-and-benefits)
 - [License](#license)
@@ -33,6 +37,41 @@ The Helm charts are used to package and deploy the Kubernetes resources for the 
 ## Terraform Configuration
 
 This folder contains high-level Terraform definitions for provisioning AKS and related Azure resources.
+
+## Terraform Resources
+
+The Terraform configuration in this project includes the following resources:
+- **azurerm_resource_group**: Creates resource groups in Azure.
+- **azurerm_virtual_network**: Creates a virtual network in Azure.
+- **azurerm_user_assigned_identity**: Creates a user-assigned identity for the AKS cluster.
+- **azurerm_kubernetes_cluster**: Creates the Azure Kubernetes Service (AKS) cluster.
+- **azurerm_storage_account**: Creates a storage account for storing Terraform state files.
+- **azurerm_container_registry**: Creates an Azure Container Registry (ACR) for storing Docker images.
+
+## Kubernetes Resources
+
+The Kubernetes resources managed by this project include:
+- **Deployments**: Manages the deployment of application components.
+- **Services**: Exposes the application components to the network.
+- **Ingress**: Manages external access to the services.
+- **HorizontalPodAutoscaler**: Automatically scales the number of pods based on resource usage.
+- **ServiceAccount**: Manages service accounts for the application components.
+
+## Flux Configuration and Workflows
+
+The Flux configuration and workflows in this project include:
+- **GitRepository**: Defines the source repository for the Flux configuration.
+- **Kustomization**: Manages the application of Kubernetes manifests.
+- **HelmRelease**: Manages the deployment of Helm charts.
+- **HelmRepository**: Defines the Helm repositories used by the project.
+- **GitHub Actions**: Automates the deployment process using CI/CD pipelines.
+
+## GitHub Actions Workflows
+
+The GitHub Actions workflows in this project include:
+- **Terraform Deploy**: Automates the deployment of infrastructure using Terraform.
+- **Terraform Destroy**: Automates the destruction of infrastructure using Terraform.
+- **App Deploy**: Automates the deployment of the application to the Kubernetes cluster using Helm and Flux.
 
 ## Purpose and Contents
 
