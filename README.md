@@ -1,6 +1,6 @@
-# Mark's Internship Hub
+# DevOps project
+This project manages my website and resources required by it. It runs an AKS cluster on Azure with terraform, utilizes workflows and flux for convinient updates
 
-Welcome to Mark's repository for managing Kubernetes clusters using Flux.
 
 ## Table of Contents
 
@@ -34,6 +34,7 @@ The Helm charts are used to package and deploy the Kubernetes resources for the 
 
 This folder contains high-level Terraform definitions for provisioning AKS and related Azure resources.
 
+#Note about running terraform
 Before running Terraform, you must set up a remote backend to store your state. This involves creating the necessary backend resources (resource group, storage account, and container) manually and then importing them into Terraform state. Alternatively, you may initially configure a local backend and later migrate your state to a remote backend.
 
 ## Purpose and Contents
